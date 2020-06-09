@@ -1,5 +1,5 @@
 # compute the RMSE of our final model on the validation set
-# THIS IS NOT MY TRAINING SCRIPT. My report shows how I trained and tested the model. This script just uses my final methods to compute the final RMSE.
+# THIS IS NOT MY TRAINING SCRIPT. My report shows how I trained and tested the model. This script just uses the final methods in the model amd computes the final RMSE.
 library(tidyverse)
 library(lubridate)
 library(recosystem)
@@ -91,7 +91,6 @@ opts = r$tune(train_data, opts = list(dim = c(10, 20, 30), lrate = c(0.1, 0.2),
                                       nthread = 1, niter = 10))
 # train
 set.seed(123)
-# the parameters in opts were previously tuned
 r$train(train_data, opts = c(opts$min, nthread = 1, niter = 10))
 
 # add b_i's and b_u's to the validation set
