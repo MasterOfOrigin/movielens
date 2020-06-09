@@ -20,7 +20,7 @@ validation <- readRDS('./validation.rds')
 
 ## Introduction
 
-In this analysis we will be creating a recommendation algorithm that predicts movie ratings using the MovieLens dataset. If you don't have the edx and validation rds files in this directory, this script will not work. You can download them [here](https://drive.google.com/drive/folders/1IZcBBX0OmL9wu9AdzMBFUG8GoPbGQ38D).
+In this analysis we will be creating a recommendation algorithm that predicts movie ratings using the MovieLens dataset. If you don't have the edx and validation rds files in this directory, this script will not work. You can download them [**here**](https://drive.google.com/drive/folders/1IZcBBX0OmL9wu9AdzMBFUG8GoPbGQ38D).
 
 The metric we will use to evaluate our model is the RMSE, or root mean squared error.
 
@@ -107,7 +107,7 @@ The most simple model we can make is to predict the same rating every time. The 
 # naive model that predicts average rating everytime
 mu <- mean(train_set$rating)
 naive_rmse <- RMSE(test_set$rating, mu)
-rmse_results <-data_frame(method = "Just the average", RMSE = naive_rmse)
+rmse_results <- tibble(method = "Just the average", RMSE = naive_rmse)
 rmse_results %>% knitr::kable()
 ```
 
@@ -330,9 +330,9 @@ To see how we would model this, let's look at our current model. Right now our m
 
 E_i_j is the error term, which just represents random variability.
 
-We want to find a matrix P and a matrix Q that when multiplied together will approximate our matrix of residuals. In order to do this, we will be using a package called [recosystem](https://cran.r-project.org/web/packages/recosystem/vignettes/introduction.html). Recosystem's functions will abstract most of the complexity away from us.
+We want to find a matrix P and a matrix Q that when multiplied together will approximate our matrix of residuals. In order to do this, we will be using a package called [**recosystem**][recosystem]. Recosystem's functions will abstract most of the complexity away from us.
 
-To start, recosystem requires us to specify the data set as an object of class _DataSource_. We will use the data_memory() function in order to do this.
+To start, [**recosystem**][recosystem] requires us to specify the data set as an object of class _DataSource_. We will use the data_memory() function in order to do this.
 
 ```{r}
 # specify data set for recosystem's DataSource
@@ -368,7 +368,7 @@ r$train(train_data,  opts = c(opts$min, nthread = 1, niter = 10))
 
 ```
 
-Our final step is to predict the residuals of our test data using the matrix factorization computed by recosystem. Then we will add them to our mu, and movie and user effects to predict the ratings. Lastly, we should change any values over the maximum and below the minimum to the maximum and minimum values respectively. Note: prior to Febuary 12, 2003 there were no half ratings, so the minimum value before then was 1 and 0.5 afterwards.
+Our final step is to predict the residuals of our test data using the matrix factorization computed by [**recosystem**][recosystem]. Then we will add them to our mu, and movie and user effects to predict the ratings. Lastly, we should change any values over the maximum and below the minimum to the maximum and minimum values respectively. Note: prior to Febuary 12, 2003 there were no half ratings, so the minimum value before then was 1 and 0.5 afterwards.
 
 ```{r}
 # predict
@@ -439,5 +439,8 @@ Very Good! Our final model obtained an RMSE of 0.7971095! This model, which comb
 
 ## Conclusion
 
-In our final model we used the mean, the regularized movie effect, the regularized user effect, and latent user and movie factors obtained from matrix factorization in order to predict ratings in the validation set. Our final RMSE was about 0.797. There are many different ways to factorize a matrix, which we could have have tried. If we wanted to improve upon our current methodology we could have tried tuning the matrix factorization further by trying out more parameters in recosystem's r$tune function. However, this would have required even longer compute time. Additionally, recosystem uses stochastic gradient methods to solve the factorized matrix, which uses randomization, so the optimal solution will change slightly every time. Perhaps, there is a way we could obtain a more exact result. There was also a lot of information available to us that was ignored from our model. We did not include the genres column in this analysis, and the timestamp was for the most part ignored. Perhaps if we wanted to improve upon this model, we could look for seasonal or yearly effects on ratings. Additionally, we could try to compute the effect different genres have on the ratings for different users.  
+In our final model we used the mean, the regularized movie effect, the regularized user effect, and latent user and movie factors obtained from matrix factorization in order to predict ratings in the validation set. Our final RMSE was about 0.797. There are many different ways to factorize a matrix, which we could have tried. If we wanted to improve upon our current methodology we could have tried tuning the matrix factorization further by trying out more parameters in [**recosystem**][recosystem]'s r$tune function. However, this would have required even longer compute time. Additionally, [**recosystem**][recosystem] uses stochastic gradient methods to solve the factorized matrix, which uses randomization, so the optimal solution will change slightly every time. Perhaps, there is a way we could obtain a more exact result. There was also a lot of information available to us that was ignored from our model. We did not include the genres column in this analysis, and the timestamp was for the most part ignored. Perhaps if we wanted to improve upon this model, we could look for seasonal or yearly effects on ratings. Additionally, we could try to compute the effect different genres have on the ratings for different users.  
 There are certainly more components that could be added to our model, but in the end we were able to achieve an RMSE below 0.8, which is a long way away from our first RMSE that couldn't even get below 1. Thank you for taking the time to read through my project, and I hope that you had a good time!
+
+
+[recosystem]: https://cran.r-project.org/web/packages/recosystem/vignettes/introduction.html
