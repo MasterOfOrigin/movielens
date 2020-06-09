@@ -129,7 +129,7 @@ predicted_ratings <- mu + test_set %>%
 # compute the RMSE
 model_1_rmse <- RMSE(predicted_ratings, test_set$rating)
 rmse_results <- bind_rows(rmse_results,
-                          data_frame(method="Movie Effect Model",
+                          tibble(method="Movie Effect Model",
                                      RMSE = model_1_rmse ))
 rmse_results %>% knitr::kable()
 ```
@@ -156,7 +156,7 @@ predicted_ratings <- test_set %>%
 # compute rmse
 model_2_rmse <- RMSE(predicted_ratings, test_set$rating)
 rmse_results <- bind_rows(rmse_results,
-                          data_frame(method="Movie + User Effects Model",  
+                          tibble(method="Movie + User Effects Model",  
                                      RMSE = model_2_rmse ))
 rmse_results %>% knitr::kable()
 ```
@@ -183,7 +183,7 @@ train_set %>%
   head()
 ```
 
-As you can see the movies with largest b_i's in magnitude are really obscure movies that have only one or two reviews for. The users with the largest b_u's in magnitude have only around 15 ratings, which is far less than what we'd expect given the graph from earlier.
+As you can see the movies with largest b_i's in magnitude are really obscure movies that we have only one or two reviews for. The users with the largest b_u's in magnitude have only around 15 ratings, which is far less than what we'd expect given the graph from earlier.
 
 In order to solve this problem we will use regularization, which is a technique for shrinking the effects for features we don't have many observations for. We'll start by doing this for the movie effect.
 
@@ -215,7 +215,7 @@ b_i_lambda <- lambdas[which.min(rmses)]
 movie_avgs_reg <- get_movie_effect_reg(b_i_lambda)
 
 rmse_results <- bind_rows(rmse_results,
-                          data_frame(method="Regularized Movie Effect Model",
+                          tibble(method="Regularized Movie Effect Model",
                                      RMSE = min(rmses)))
 rmse_results %>% knitr::kable()
 ```
@@ -250,7 +250,7 @@ b_u_lambda <- lambdas[which.min(rmses)]
 user_avgs_reg <- get_user_avgs_reg(b_u_lambda)
 
 rmse_results <- bind_rows(rmse_results,
-                          data_frame(method="Regularized Movie + User Effect Model",
+                          tibble(method="Regularized Movie + User Effect Model",
                                      RMSE = min(rmses)))
 rmse_results %>% knitr::kable()
 ```
@@ -394,7 +394,7 @@ predicted_ratings[ind] <- 0.5
 
 # compute RMSE
 rmse_results <- bind_rows(rmse_results,
-                          data_frame(method="Regularized Movie + User Effect + Matrix Factorization Model",
+                          tibble(method="Regularized Movie + User Effect + Matrix Factorization Model",
                                      RMSE = RMSE(predicted_ratings, test_set$rating)))
 
 rmse_results %>% knitr::kable()
@@ -439,7 +439,7 @@ Very Good! Our final model obtained an RMSE of 0.7971095! This model, which comb
 
 ## Conclusion
 
-In our final model we used the mean, the regularized movie effect, the regularized user effect, and latent user and movie factors obtained from matrix factorization in order to predict ratings in the validation set. Our final RMSE was about 0.797. There are many different ways to factorize a matrix. If we wanted to improve upon our current methodology we could have tried tuning the matrix factorization further by trying out more parameters in [**recosystem**][recosystem]'s r$tune function. However, this would have required even longer compute time. Additionally, [**recosystem**][recosystem] uses stochastic gradient methods to solve the factorized matrix, which uses randomization, so the optimal solution will change slightly every time. Perhaps, there is a way we could obtain a more exact result. There was also a lot of information available to us that was ignored from our model. We did not include the genres column in this analysis, and the timestamp was for the most part ignored. Perhaps if we wanted to improve upon this model, we could look for seasonal or yearly effects on ratings. Additionally, we could try to compute the effect different genres have on the ratings for different users.  
+In our final model we used the mean, the regularized movie effect, the regularized user effect, and latent user and movie factors obtained from matrix factorization in order to predict ratings in the validation set. Our final RMSE was about 0.797. If we wanted to improve upon our current methodology we could have tried tuning the matrix factorization further by trying out more parameters in [**recosystem**][recosystem]'s r$tune function. However, this would have required even longer compute time. Additionally, [**recosystem**][recosystem] uses stochastic gradient methods to solve the factorized matrix, which uses randomization, so the optimal solution will change slightly every time. Perhaps, there is a way we could obtain a more exact result. There was also a lot of information available to us that was ignored from our model. We did not include the genres column in this analysis, and the timestamp was for the most part ignored. Perhaps if we wanted to improve upon this model, we could look for seasonal or yearly effects on ratings. Additionally, we could try to compute the effect different genres have on the ratings for different users.  
 There are certainly more components that could be added to our model, but in the end we were able to achieve an RMSE below 0.8, which is a long way away from our first RMSE that couldn't even get below 1. Thank you for taking the time to read through my project, and I hope that you had a good time!
 
 
