@@ -21,9 +21,13 @@ test_set <- test_set %>%
   semi_join(train_set, by = "movieId") %>%
   semi_join(train_set, by = "userId")
 
+# RMSE function
 RMSE <- function(predicted_ratings, true_ratings){
   sqrt(mean((predicted_ratings - true_ratings)^2))
 }
+
+# compute mu as mean rating
+mu <- mean(train_set$rating)
 
 # function that takes lambda as an argument and computes the regularized movie effect for each movie
 get_movie_effect_reg <- function(l) {
@@ -110,6 +114,12 @@ predicted_ratings <- r$predict(validation_data, out_memory()) + mu + validation$
 # change predictions over max to the max
 ind <- which(predicted_ratings > 5)
 predicted_ratings[ind] <- 5
+
+# find first half rating
+half_rating_start <- train_set %>%
+  filter(rating %% 1 == 0.5) %>%
+  pull(timestamp) %>%
+  min()
 
 # change predictions under min to the min
 ind <- which(predicted_ratings < 1 & validation$timestamp < half_rating_start)
