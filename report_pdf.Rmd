@@ -20,7 +20,7 @@ validation <- readRDS('./validation.rds')
 
 ## Introduction
 
-In this analysis we will be creating a recommendation algorithm that predicts movie ratings using the MovieLens dataset. 
+In this analysis we will be creating a recommendation algorithm that predicts movie ratings using the MovieLens dataset. If you don't have the edx and validation rds files in this directory, this script will not work. You can download them [here](https://drive.google.com/drive/folders/1IZcBBX0OmL9wu9AdzMBFUG8GoPbGQ38D).
 
 The metric we will use to evaluate our model is the RMSE, or root mean squared error.
 

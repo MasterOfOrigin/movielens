@@ -5,6 +5,7 @@ library(lubridate)
 library(recosystem)
 library(caret)
 library(dplyr)
+# must have edx and validation rds files in this directory, files can be found here https://drive.google.com/drive/folders/1IZcBBX0OmL9wu9AdzMBFUG8GoPbGQ38D
 edx <- readRDS('./edx.rds')
 validation <- readRDS('./validation.rds')
 
